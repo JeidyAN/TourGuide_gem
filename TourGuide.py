@@ -121,7 +121,7 @@ class TravelAppEngine:
         doc = SimpleDocTemplate(save_path, pagesize=A4)
         styles = getSampleStyleSheet()
         style_kor = ParagraphStyle('Kor', fontName='KoreanFont', fontSize=10, leading=14)
-        style_title = ParagraphStyle('Title', fontName='KoreanFont', fontSize=16, leading=20, spaceAfter=18)
+        style_title = ParagraphStyle('Title', fontName='KoreanFont', fontSize=12, leading=14, spaceAfter=10)
         style_link = ParagraphStyle('Link', fontName='KoreanFont', fontSize=10, textColor='blue', underline=True)
 
         elements = []
@@ -304,6 +304,7 @@ if st.session_state.plan_data:
         st.session_state.result_path = None
 
         st.rerun()
+
 
 
 
