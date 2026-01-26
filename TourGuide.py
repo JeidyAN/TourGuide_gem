@@ -115,7 +115,7 @@ class TravelAppEngine:
         if not os.path.exists(FONT_PATH):
             return f"폰트 파일을 찾을 수 없습니다: {FONT_PATH}"
         
-        # pdfmetrics.registerFont(TTFont('KoreanFont', FONT_PATH))
+        pdfmetrics.registerFont(TTFont('KoreanFont', FONT_PATH))
 
         # 3. PDF 문서 구성
         doc = SimpleDocTemplate(save_path, pagesize=A4)
@@ -304,6 +304,7 @@ if st.session_state.plan_data:
         st.session_state.result_path = None
 
         st.rerun()
+
 
 
 
