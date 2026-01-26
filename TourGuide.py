@@ -274,7 +274,7 @@ if st.session_state.plan_data:
         # 모바일 가독성을 위해 번호와 이름을 강조
         title = f"📍 {loc.get('no')}. {loc.get('name')}"
         with st.expander(title, expanded=False): # 모바일에서는 닫아두는 것이 좋음
-            st.markdow(f"**[{loc.get('type')}]**)
+            st.markdow(f"**[{loc.get('type')}]**")
             st.write(loc.get('desc', '설명이 없습니다.'))
             st.caption(f"💰 {loc.get('price', '-')} | 🎟️ {loc.get('reserve', '-')}")
             
@@ -304,5 +304,6 @@ if st.session_state.plan_data:
         st.session_state.result_path = None
 
         st.rerun()
+
 
 
