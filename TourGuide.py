@@ -163,7 +163,7 @@ class TravelAppEngine:
             return f"PDF 빌드 중 오류 발생: {e}"
                
 # --- Streamlit UI ---
-st.set_page_config(page_title="AI 스마트 가이드", layout="wide")
+st.set_page_config(page_title="AI 스마트 가이드", layout="centered")
 
 # 세션 상태 초기화
 if "plan_data" not in st.session_state:
@@ -297,4 +297,5 @@ if st.session_state.plan_data:
     if st.button("처음부터 다시 시작"):
         st.session_state.plan_data = None
         st.session_state.result_path = None
+
         st.rerun()
