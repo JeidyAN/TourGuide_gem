@@ -171,7 +171,7 @@ if "plan_data" not in st.session_state:
 if "result_path" not in st.session_state:
     st.session_state.result_path = None
 
-st.title("🌍 AI 맞춤형 도시 여행 가이드")
+st.title("🌍 AI 도시 여행 가이드")
 
 # 사이드바 설정
 st.sidebar.header("📍 여행지 선택")
@@ -304,6 +304,7 @@ if st.session_state.plan_data:
         st.session_state.result_path = None
 
         st.rerun()
+
 
 
 
