@@ -1,0 +1,8 @@
+streamlit
+google-genai
+pdfplumber
+folium
+streamlit-folium
+reportlab
+os
+json
