@@ -37,10 +37,10 @@ class TravelAppEngine:
         # 경로 예: D:\TourGuide\Spain\Madrid
         self.target_path = os.path.join(BASE_DIR,"TourGuide",country, city)
         self.web_sites = web_sites_list
-        self.output_dir = "Travel_Results_App"
+        # self.output_dir = "Travel_Results_App" # 배포 서버(리눅스)는 쓰기 권한이 제한될 수 있어 /tmp 또는 현재 작업 폴더 권장
 
         if not os.path.exists(self.target_path):
-            os.makedirs(self.target_path)
+            os.makedirs(self.target_path, exist_ok=True)
 
     def extract_local_pdf(self):
         """설정된 국가/도시 폴더에서 PDF 텍스트 추출"""
@@ -101,7 +101,7 @@ class TravelAppEngine:
         """분석 결과를 PDF로 만들어 최상위 폴더에 저장"""
         root_path = BASE_DIR
 
-         # 1. 만약 D:\TourGuide 폴더가 없으면 생성 (에러 방지)
+         # 1. 만약 저장 폴더가 없으면 생성 (에러 방지)
         if not os.path.exists(root_path):
             try:
                 os.makedirs(root_path)
@@ -121,7 +121,7 @@ class TravelAppEngine:
         doc = SimpleDocTemplate(save_path, pagesize=A4)
         styles = getSampleStyleSheet()
         style_kor = ParagraphStyle('Kor', fontName='KoreanFont', fontSize=10, leading=14)
-        style_title = ParagraphStyle('Title', fontName='KoreanFont', fontSize=18, leading=22, spaceAfter=20)
+        style_title = ParagraphStyle('Title', fontName='KoreanFont', fontSize=16, leading=20, spaceAfter=18)
         style_link = ParagraphStyle('Link', fontName='KoreanFont', fontSize=10, textColor='blue', underline=True)
 
         elements = []
@@ -299,3 +299,4 @@ if st.session_state.plan_data:
         st.session_state.result_path = None
 
         st.rerun()
+
