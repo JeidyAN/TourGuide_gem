@@ -171,7 +171,7 @@ if "plan_data" not in st.session_state:
 if "result_path" not in st.session_state:
     st.session_state.result_path = None
 
-st.title("🌍 AI 도시 여행 가이드")
+st.title("🌍 AI 여행 가이드")
 
 # 사이드바 설정
 st.sidebar.header("📍 여행지 선택")
@@ -273,7 +273,7 @@ if st.session_state.plan_data:
     for idx, loc in enumerate(locs):
         # 모바일 가독성을 위해 번호와 이름을 강조
         title = f"📍 {loc.get('no')}. {loc.get('name')}"
-        with st.expander(title, expanded=False): # 모바일에서는 닫아두는 것이 좋음
+        with st.expander(title, expanded=True): # 모바일에서는 닫아두는 것이 좋음
             st.markdown(f"**[{loc.get('type')}]**")
             st.write(loc.get('desc', '설명이 없습니다.'))
             st.caption(f"💰 {loc.get('price', '-')} | 🎟️ {loc.get('reserve', '-')}")
@@ -304,6 +304,7 @@ if st.session_state.plan_data:
         st.session_state.result_path = None
 
         st.rerun()
+
 
 
 
