@@ -250,12 +250,13 @@ if st.session_state.plan_data:
                 data=f.read(),
                 file_name=os.path.basename(pdf_path),
                 mime="application/pdf",
-                use_container_width=True
+                use_container_width=True, # 모바일 화면 꽉차게
+                type="primary" #파란색 강조버튼
             )
     
     # 2. 지도 표시
     st.subheader(f"🗺️ {city_input} 추천 방문 경로")
-    m = folium.Map(location=[locs[0]['lat'], locs[0]['lng']], zoom_start=14)
+    m = folium.Map(location=[locs[0]['lat'], locs[0]['lng']], zoom_start=13, control_scale=True)
     path_points = [[l['lat'], l['lng']] for l in locs]
     
     for loc in locs:
@@ -264,12 +265,16 @@ if st.session_state.plan_data:
                       icon=folium.Icon(color=color)).add_to(m)
     
     folium.PolyLine(path_points, color="green", weight=2.5).add_to(m)
-    st_folium(m, use_container_width=True, height=500, key=f"map_{len(locs)}")
-
+    # 부모 컨테이너 너비에 맞춤, 모바일에서 한눈에 들어오는 높이, 불필요한 데이터 반환을 막아 성능 향상
+    st_folium(m, use_container_width=True, height=350, key=f"map_{len(locs)}", returned_objects=[]) 
+    
     # 3. 상세 정보 카드
     st.subheader("📋 장소별 상세 가이드")
     for idx, loc in enumerate(locs):
-        with st.expander(f"[{loc.get('no', idx+1)}] {loc.get('name', '이름 없음')} ({loc.get('type', '')})", expanded=True):
+        # 모바일 가독성을 위해 번호와 이름을 강조
+        title = f"📍 {loc.get('no')}. {loc.get('name')}"
+        with st.expander(title, expanded=False): # 모바일에서는 닫아두는 것이 좋음
+            st.markdow(f"**[{loc.get('type')}]**)
             st.write(loc.get('desc', '설명이 없습니다.'))
             st.caption(f"💰 {loc.get('price', '-')} | 🎟️ {loc.get('reserve', '-')}")
             
@@ -299,4 +304,5 @@ if st.session_state.plan_data:
         st.session_state.result_path = None
 
         st.rerun()
+
 
