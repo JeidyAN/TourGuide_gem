@@ -29,6 +29,33 @@ BASE_DIR = os.getcwd()
 FONT_PATH = os.path.join(BASE_DIR, "NanumGothic.ttf")
 # FONT_PATH = "C:/Windows/Fonts/malgun.ttf" 
 
+# ------------------------------- # ① CSV 로딩 함수 # -------------------------------
+@st.cache_data
+def load_city_urls():
+    df = pd.read_csv("city_urls.csv")
+    return df
+    
+df_urls = load_city_urls()
+
+from rapidfuzz import process
+
+def correct_city_name(input_city, df):
+    city_list = df['city'].unique().tolist()
+    best_match, score, _ = process.extractOne(input_city, city_list)
+    
+    # 유사도 점수 70 이상일 때만 자동 보정
+    if score >= 70:
+        return best_match
+    return input_city
+
+# ------------------------------- # ② 국가+도시로 URL 자동 검색 함수 # -------------------------------
+def get_urls(country, city):
+    row = df_urls[(df_urls['country'] == country) & (df_urls['city'] == city)]
+    if row.empty:
+        return []
+    return row.iloc[0]['urls'].split(';')
+
+# ------------------------------- # TravelAppEngine 클래스 시작 # -------------------------------
 class TravelAppEngine:
     def __init__(self, country, city, web_sites_list):
         # 국가명과 도시명을 조합하여 상세 경로 설정
@@ -58,7 +85,13 @@ class TravelAppEngine:
             return f"경로를 찾을 수 없습니다: {self.target_path}"
         
         return text_data[:5000] # 토큰 제한을 고려한 슬라이싱
-
+        
+    def get_urls(country, city):
+        row = df_urls[(df_urls['country'] == country) & (df_urls['city'] == city)]
+        if row.empty:
+            return []  # 없으면 빈 리스트
+        return row.iloc[0]['urls'].split(';')
+        
     def get_travel_plan(self, must_count, good_count, user_feedback=""):
         local_info = self.extract_local_pdf()
         
@@ -176,9 +209,35 @@ st.title("🌍 AI 여행 가이드")
 # 사이드바 설정
 st.sidebar.header("📍 여행지 선택")
 country_select = st.sidebar.selectbox("국가 선택", ["Spain", "Portugal"])
-city_input = st.sidebar.text_input("도시 입력", value="Madrid")
-web_sites_input = st.sidebar.text_area("참고 사이트", value="https://www.spain.info")
-web_sites_list = [url.strip() for url in web_sites_input.split(',')]
+# city_input = st.sidebar.text_input("도시 입력", value="Madrid")
+raw_city_input = st.sidebar.text_input("도시 입력", value="Madrid")
+
+# 오타 자동 보정
+city_input = correct_city_name(raw_city_input, df_urls)
+
+if raw_city_input != city_input:
+    st.sidebar.success(f"도시명을 자동 보정했습니다 → {city_input}")
+    
+# web_sites_input = st.sidebar.text_area("참고 사이트", value="https://www.spain.info")
+# web_sites_list = [url.strip() for url in web_sites_input.split(',')]
+# ------------------------------- # ③ 자동 URL + 추가 입력 병합 # -------------------------------
+# 자동 불러오기
+auto_urls = get_urls(country_select, city_input)
+
+st.sidebar.write("📌 자동 불러온 참고 사이트:")
+if auto_urls:
+    for u in auto_urls:
+        st.sidebar.write(f"- {u}")
+else:
+    st.sidebar.write("등록된 URL이 없습니다.")
+
+# 추가 입력 (선택)
+extra_urls_input = st.sidebar.text_area("추가 참고 사이트 입력 (선택)", value="")
+extra_urls = [x.strip() for x in extra_urls_input.split(',') if x.strip()]
+
+# 최종 URL 리스트
+web_sites_list = auto_urls + extra_urls
+
 must_n = st.sidebar.number_input("Must to visit", 1, 10, 5)
 good_n = st.sidebar.number_input("Good to visit", 1, 10, 5)
 
@@ -304,6 +363,7 @@ if st.session_state.plan_data:
         st.session_state.result_path = None
 
         st.rerun()
+
 
 
 
