@@ -3,6 +3,7 @@ import os
 import json
 import pdfplumber
 import folium
+import pandas
 from google import genai
 from streamlit_folium import st_folium
 from reportlab.pdfgen import canvas
@@ -363,6 +364,7 @@ if st.session_state.plan_data:
         st.session_state.result_path = None
 
         st.rerun()
+
 
 
 
