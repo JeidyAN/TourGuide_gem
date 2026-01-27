@@ -4,3 +4,5 @@ pdfplumber
 folium
 streamlit-folium
 reportlab
+pandas
+rapidfuzz
