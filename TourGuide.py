@@ -225,7 +225,7 @@ if raw_city_input != city_input:
 # 자동 불러오기
 auto_urls = get_urls(country_select, city_input)
 
-st.sidebar.write("📌 자동 불러온 참고 사이트:")
+st.sidebar.write("📌 참고 사이트(자료):")
 if auto_urls:
     for u in auto_urls:
         st.sidebar.write(f"- {u}")
@@ -233,7 +233,7 @@ else:
     st.sidebar.write("등록된 URL이 없습니다.")
 
 # 추가 입력 (선택)
-extra_urls_input = st.sidebar.text_area("추가 참고 사이트 입력 (선택)", value="")
+extra_urls_input = st.sidebar.text_area("추가 참고 사이트 입력(선택)", value="")
 extra_urls = [x.strip() for x in extra_urls_input.split(',') if x.strip()]
 
 # 최종 URL 리스트
@@ -321,8 +321,28 @@ if st.session_state.plan_data:
     
     for loc in locs:
         color = 'red' if loc['type'] == 'Must to visit' else 'blue'
-        folium.Marker([loc['lat'], loc['lng']], popup=loc['name'], 
-                      icon=folium.Icon(color=color)).add_to(m)
+        #folium.Marker([loc['lat'], loc['lng']], popup=loc['name'],icon=folium.Icon(color=color)).add_to(m)
+        folium.Marker(
+            location=[loc['lat'], loc['lng']],
+            popup=loc['name'],
+            icon=folium.DivIcon(
+                html=f"""
+                <div style="
+                    font-size: 14px;
+                    color: white;
+                    background-color: { 'red' if loc['type']=='Must to visit' else 'blue' };
+                    border-radius: 50%;
+                    width: 28px;
+                    height: 28px;
+                    text-align: center;
+                    line-height: 28px;
+                    font-weight: bold;">
+                    {loc['no']}
+                </div>
+                """
+            )
+        ).add_to(m)
+
     
     folium.PolyLine(path_points, color="green", weight=2.5).add_to(m)
     # 부모 컨테이너 너비에 맞춤, 모바일에서 한눈에 들어오는 높이, 불필요한 데이터 반환을 막아 성능 향상
@@ -364,6 +384,7 @@ if st.session_state.plan_data:
         st.session_state.result_path = None
 
         st.rerun()
+
 
 
 
