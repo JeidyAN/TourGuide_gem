@@ -35,7 +35,7 @@ FONT_PATH = os.path.join(BASE_DIR, "NanumGothic.ttf")
 CSV_PATH = os.path.join(os.path.dirname(__file__), "city_urls.csv")
 
 # 디버깅용: CSV 파일 존재 여부 확인
-st.write("CSV exists:", os.path.exists(CSV_PATH))
+# st.write("CSV exists:", os.path.exists(CSV_PATH))
 
 @st.cache_data
 def load_city_urls():
@@ -397,6 +397,7 @@ if st.session_state.plan_data:
         st.session_state.result_path = None
 
         st.rerun()
+
 
 
 
