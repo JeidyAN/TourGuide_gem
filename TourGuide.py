@@ -31,12 +31,25 @@ FONT_PATH = os.path.join(BASE_DIR, "NanumGothic.ttf")
 # FONT_PATH = "C:/Windows/Fonts/malgun.ttf" 
 
 # ------------------------------- # ① CSV 로딩 함수 # -------------------------------
+# --- CSV 파일 절대경로 설정 ---
+CSV_PATH = os.path.join(os.path.dirname(__file__), "city_urls.csv")
+
+# 디버깅용: CSV 파일 존재 여부 확인
+st.write("CSV exists:", os.path.exists(CSV_PATH))
+
 @st.cache_data
 def load_city_urls():
-    df = pd.read_csv("city_urls.csv")
+    df = pd.read_csv(CSV_PATH)
     return df
-    
+
 df_urls = load_city_urls()
+
+# @st.cache_data
+# def load_city_urls():
+    # df = pd.read_csv("city_urls.csv")
+    # return df
+    
+# df_urls = load_city_urls()
 
 from rapidfuzz import process
 
@@ -384,6 +397,7 @@ if st.session_state.plan_data:
         st.session_state.result_path = None
 
         st.rerun()
+
 
 
 
